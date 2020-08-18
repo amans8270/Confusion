@@ -81,7 +81,9 @@ class Header1 extends Component
                 <Modal isOpen={this.state.isModalOpen} toggle={this.state.toggleModal}>
                     <ModalHeader toggle={this.state.toggleModal}>
                         Login
+                        <Button className="close mr-auto"  onClick={this.toggleModal}>&times;</Button>
                     </ModalHeader>
+                    
                     <ModalBody>
                     <Form onSubmit={this.handleLogin}>
                             <FormGroup>

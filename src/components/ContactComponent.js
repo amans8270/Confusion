@@ -28,7 +28,7 @@ class Contact extends Component
         
     }
 
-    handleBlur=(field)=>(evt)=> {
+    handleBlur=(field)=>(event)=> {
         this.setState({...this.state.touched,[field]:true});
     }
     handleInputChange(event)

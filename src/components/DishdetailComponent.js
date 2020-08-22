@@ -1,8 +1,89 @@
 import React from 'react';
-import { Card, CardImg, CardBody, CardText, CardTitle,BreadcrumbItem, Breadcrumb } from 'reactstrap';
+import { Card, CardImg, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbItem, Button, FormGroup, 
+    Label, Modal, ModalBody, ModalHeader,Row} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import { Control, LocalForm, Errors } from 'react-redux-form';
 
 
+
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !(val) || (val.length <= len);
+const minLength = (len) => (val) => val && (val.length >= len);
+
+
+class CommentForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isModalOpen: false
+    }
+
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  toggleModal() {
+    this.setState({
+        isModalOpen: !this.state.isModalOpen
+    });
+  }
+  
+  handleSubmit(event) {
+      console.log('Current State is: ' + JSON.stringify(this.state));
+      alert('Current State is: ' + JSON.stringify(this.state));
+      event.preventDefault();
+  }
+
+  render() {
+    return (
+      <div className="container" >
+        <Button outline onClick={this.toggleModal} outline color="secondary"><span className="fa fa-pencil fa-fw"></span>Submit Comment</Button>
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader><h3>Submit comment</h3></ModalHeader>
+          <ModalBody>
+            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+            <Row className="form-group">
+                <Label htmlFor="rating">Rating</Label>
+                <Control.select model=".rating" id="rating" name="rating"
+                className="form-control" 
+                >
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    </Control.select>
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="author">Your Name</Label>
+                <Control.text model=".author" id="author" name="author"
+                placeholder="Your Name"
+                className="form-control"
+                validators={{required, minLength: minLength(3), maxLength: maxLength(15)}} />
+                <Errors
+                  className="text-danger"
+                  model=".author"
+                  show="touched"
+                  messages={{
+                      required: 'Required',
+                      minLength: 'Must be greater than 2 letters',
+                      maxLength: 'Must be 15 letters or less' }} />
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="comment">Comment</Label>
+                <Control.textarea model=".comment" id="comment" name="comment" rows="6"
+                className="form-control"/>
+              </Row>
+              <Button type="submit" value="submit" color="primary">Submit</Button>
+            </LocalForm>
+          </ModalBody>
+        </Modal>
+      </div>
+    );
+  }
+}
    function RenderComments({comments}) {
         if (comments != null) {
             return (
@@ -25,6 +106,7 @@ import {Link} from 'react-router-dom';
                   );
                 })}
                 </ul>
+                <CommentForm/>
                 </div>
             );
         }
@@ -50,34 +132,32 @@ import {Link} from 'react-router-dom';
             );
         }
 
-        const  DishDetail = (props) => {
-        if(props.dish!=null)
-        {
-            return (
-                <div className="container">
-                <div className="row">
+        const DishDetail = (props) => {
+            if (props.dish != null) {
+              return (
+                <div class="container">
+                  <div className="row">
                     <Breadcrumb>
-
-                        <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                      <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
+                      <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
                     </Breadcrumb>
                     <div className="col-12">
-                        <h3>{props.dish.name}</h3>
-                        <hr />
-                    </div>                
+                      <h3>{props.dish.name}</h3>
+                      <hr />
+                    </div>  
+                  </div>
+                  <div class="row">
+                    <RenderDish dish={props.dish} />
+                    <RenderComments comments={props.comments} />
+                  </div>
                 </div>
-                <div className="row">
-                    <div className="col-12   m-5">
-                        <RenderDish dish={props.dish} />
-                    </div>
-                    <div className="col-12   m-5">
-                        <RenderComments comments={props.comments} />
-                    </div>
-                </div>
-                </div>
-            );
-         }
-        }
+              );
+            } else {
+              return(
+                <div></div>
+              );
+            }
+          }
 
 
 

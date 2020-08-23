@@ -32,8 +32,7 @@ class CommentForm extends React.Component {
   
   handleSubmit(event) {
       console.log('Current State is: ' + JSON.stringify(this.state));
-      alert('Current State is: ' + JSON.stringify(this.state));
-      event.preventDefault();
+      this.props.addComment(this.props.dishId, event.rating, event.author, event.comment);
   }
 
   render() {
@@ -84,7 +83,7 @@ class CommentForm extends React.Component {
     );
   }
 }
-   function RenderComments({comments}) {
+   function RenderComments({comments,addComment, dishId}) {
         if (comments != null) {
             return (
                 <div className="col-12 col-md-5 m-1">
@@ -106,7 +105,7 @@ class CommentForm extends React.Component {
                   );
                 })}
                 </ul>
-                <CommentForm/>
+                <CommentForm dishId={dishId} addComment={addComment}/>
                 </div>
             );
         }
@@ -148,7 +147,10 @@ class CommentForm extends React.Component {
                   </div>
                   <div class="row">
                     <RenderDish dish={props.dish} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments comments={props.comments}
+        addComment={props.addComment}
+        dishId={props.dish.id}
+      />
                   </div>
                 </div>
               );

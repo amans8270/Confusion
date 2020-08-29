@@ -6,6 +6,7 @@ import { Leaders } from './leaders';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger'
 import { createForms } from 'react-redux-form';
+import { InitialFeedback } from './forms';
 export const ConfigureStore = () => {
     const store = createStore(
         combineReducers({
@@ -13,7 +14,7 @@ export const ConfigureStore = () => {
             comments: Comments,
             promotions: Promotions,
             leaders: Leaders,
-            createForms({
+            ...createForms({
                 feedback: InitialFeedback
             })
         }),
